@@ -1,0 +1,200 @@
+﻿clear variables;
+close all;
+
+
+Fs=500;
+B=160;
+nu_0=100;
+T=100;
+Pb=5;
+sigma=sqrt(Pb);
+
+
+t=0:0.5:100
+
+
+Xp = struct('sigma',sigma,'Fs',Fs,'B',B,'T',T)
+
+
+figure(1);
+[X,Xp]=CGN(Xp);
+
+
+figure(2);
+plot(X.time,X.data);
+
+
+Moyenne=mean(X.data)
+Variance = std(X.data)^2
+
+
+figure(3);
+Fp = struct('Fs',Fs,'F0',nu_0,'Dnu',16,'order',6,'class','Butterworth') ;  
+[Y,Fp] = BPF(X,Fp)
+
+
+Moyenne2=mean(Y.data)
+Variance2 = std(Y.data)^2
+
+
+Z=SquareSig(Y);
+Dnu=16;
+
+
+RCDnu=[2 20 100]
+
+
+for i=1:1:3;
+        figure(3+i)
+        RC=RCDnu(i)/Dnu;
+        RCFp=struct('Fs',Fs,'RC',RC);
+        [W,RCFp] = RCF (Z,RCFp);
+        i
+        M=mean(W.data)
+        V=std(W.data).^2
+        k=kurtosis(W.data)
+    
+end
+clear variables;
+close all;
+
+
+Fs=500;
+B=160;
+nu_0=100;
+T=100;
+Pb=5;
+sigma=sqrt(Pb);
+A=1;
+
+
+figure(1);
+Sp = struct('Fs',Fs,'A',A,'Fc',nu_0,'FM',0,'Phi',2*pi*rand(),'T',100,'W',[]);
+[S,Sp,M] = OOK(Sp);
+
+
+Bp = struct('sigma',sigma,'Fs',Fs,'B',B,'T',T)
+figure(2);
+[B,Bp]=CGN(Bp);
+
+
+figure(3);
+[X] = AddSig(S,B);
+plot(X.data)
+
+
+figure(4);
+Fp = struct('Fs',Fs,'F0',nu_0,'Dnu',16,'order',6,'class','Butterworth') ;  
+[Y,Fp] = BPF(X,Fp);
+
+
+Moyenne_S=mean(Y.data);
+Variance_S= std(Y.data)^2;
+
+
+Z=SquareSig(Y);
+Dnu=16;
+
+
+RCDnu=[2 20 100]
+
+
+for i=1:1:3;
+        figure(3+i)
+        RC=RCDnu(i)/Dnu;
+        RCFp=struct('Fs',Fs,'RC',RC);
+        [W,RCFp] = RCF (Z,RCFp);
+        i
+        M=mean(W.data)
+        V=std(W.data).^2
+        k=kurtosis(W.data)
+        M2=mean(W.data(5000:50000))
+        V2=std(W.data(5000:50000).^2)
+        k2=kurtosis(W.data(5000:50000))
+    
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+clear variables;
+close all;
+
+
+Fs=500;
+B=160;
+nu_0=100;
+T=100;
+Pb=5;
+sigma=sqrt(Pb);
+A=1;
+Fm=0.05
+
+
+figure(1);
+Sp = struct('Fs',Fs,'A',A,'Fc',nu_0,'FM',Fm,'Phi',2*pi*rand(),'T',100,'W',[]);
+[S,Sp,M] = OOK(Sp);
+
+
+Bp = struct('sigma',sigma,'Fs',Fs,'B',B,'T',T)
+figure(2);
+[B,Bp]=CGN(Bp);
+
+
+figure(3);
+[X] = AddSig(S,B);
+plot(X.data)
+
+
+figure(4);
+Fp = struct('Fs',Fs,'F0',nu_0,'Dnu',16,'order',6,'class','Butterworth') ;  
+[Y,Fp] = BPF(X,Fp);
+
+
+figure(5);
+Z=SquareSig(Y);
+
+
+Dnu=16;
+RCDnu= 20
+RC=RCDnu/Dnu;
+RCFp=struct('Fs',Fs,'RC',RC);
+[W,RCFp] = RCF (Z,RCFp);
+
+
+sigma2= mean(W.data);
+Bin = zeros(1, length(W.data));
+for i = 1:length(W.data)
+   if W.data(i) > sigma2
+           Bin(i) = 1;
+   end
+           
+end
+
+
+
+
+figure(6);
+subplot(411);
+plot(X.time,S.data);
+subplot(412);
+plot(X.time,X.data);
+subplot(413);
+plot(X.time,W.data);
+subplot(414);
+plot(X.time,Bin);
+
+
+Attentionellemord.Nousdisonstroisfois.

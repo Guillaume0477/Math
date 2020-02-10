@@ -1,0 +1,11 @@
+clear variables;
+close all;
+f=@(x) (exp(x)-1)/(x^2+1);
+a=1;
+b=5;
+c=myFunction(a,b,f);
+disp(c);
+f=@(x)(exp(x)-1)/(x^2+1);
+a=1;b=5;
+c=myFunction(a,b,f);
+disp(c);
